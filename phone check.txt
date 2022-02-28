@@ -1,0 +1,40 @@
+let goodArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]; // array for #s
+let symbolArray = [ "-", " ", "(", ")"]; // array for acceptable symbols
+
+
+function telephoneCheck(str) { // take String
+
+
+let charsArray = str.split(''); //convert string (str) to Array
+let accArray = []; //collect #s in an array
+
+  for (let i = 0; i < charsArray.length; i++) { // start cycling through the array characters in charsArray
+
+    if (goodArray.indexOf(charsArray[i]) < 0 && symbolArray.indexOf(charsArray[i]) < 0 ) // check array items to see if they are numbers or if they are " " or "-" or "()"
+    {
+    return false;// return false if not phone #, ie. if there are letters and chars not found in phone # notation
+    } else {
+        if (goodArray.indexOf(charsArray[i]) >= 0) // if the character are number, push them into the accArray, which holds the completed phone #
+        {
+        accArray.push(charsArray[i])
+        };
+      };
+  
+  }; //end loop }
+
+  if (accArray[0] === goodArray[0] && accArray.length === 11) // if there are 11 numbers and the first is a 1, return true
+  {
+  return true;
+  } else { 
+  
+  if (accArray.length === 10) // if there are 10 numbers, return true
+  {
+  return true;
+  }; 
+  };
+  return false; // if all fails, return false
+
+} // end function }
+
+
+console.log(telephoneCheck("555-555-5555")); // pass string

@@ -1,0 +1,67 @@
+let alphaArray = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]; // master alphabet array
+
+function checkSum(str, shiftBy) { // str =  string of letters, shiftBy = how far to shift the cipher
+
+let total = 0; // total of index of letter and shift. If > 25, it tells the function to start over in alphabet by subtracting 26. 
+let accumulator = ""; // holds the encoded string
+let remainder = 0; // for when the shiftBy # forces us to loop back through the beginning of the alphabet
+let num = 0; // array index # of current letter in str
+
+for (let i = 0; i < str.length; i++) { // loop through str
+  num = alphaArray.indexOf(str[i]); // index in the alphabet array of the current str letter
+  total = num + shiftBy;
+  
+  if (alphaArray.indexOf(str[i]) < 0 || alphaArray.indexOf(str[i]) === undefined) { // if a character is not a letter, it will be added unchanged to the ciphered str
+    accumulator += str[i];
+  } else { //if it is a letter, it will be checked to see if we can simply count ahead by the shiftBy amount, or if we have to start at the beginning of the alphabet
+
+        if (total > 25) { // greater than 25 means we have to start at the beginning of the alphabet. 
+        remainder = total - 26 // but we have to account for the letters we've already gotten through in the end of the alphabet first
+        accumulator += alphaArray[remainder]; // add the letter to the ciphered str
+    
+        } else { 
+            accumulator += alphaArray[total]; //if we can just move ahead by the shiftBy amount and still stay in the alphabet (not go past Z), then we add the letter to the ciphered str
+      
+                };
+  };
+};
+    
+    return accumulator; // return the ciphered str
+}; 
+
+console.log(checkSum("words are", 17))
+
+
+
+let alphaArray = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]; // master alphabet array
+
+function checkSum(str, shiftBy) { // str =  string of letters, shiftBy = how far to shift the cipher
+let str1 = str.toLowerCase();
+let total = 0; // total of index of letter and shift. If > 25, it tells the function to start over in alphabet by subtracting 26. 
+let accumulator = ""; // holds the encoded string
+let remainder = 0; // for when the shiftBy # forces us to loop back through the beginning of the alphabet
+let num = 0; // array index # of current letter in str
+
+for (let i = 0; i < str1.length; i++) { // loop through str
+  num = alphaArray.indexOf(str1[i]); // index in the alphabet array of the current str letter
+  total = num + shiftBy;
+  
+  if (alphaArray.indexOf(str1[i]) < 0) { // if a character is not a letter, it will be added unchanged to the ciphered str
+    accumulator += str1[i];
+  } else { //if it is a letter, it will be checked to see if we can simply count ahead by the shiftBy amount, or if we have to start at the beginning of the alphabet
+
+        if (total > 25) { // greater than 25 means we have to start at the beginning of the alphabet. 
+        remainder = total - 26 // but we have to account for the letters we've already gotten through in the end of the alphabet first
+        accumulator += alphaArray[remainder]; // add the letter to the ciphered str
+    
+        } else { 
+            accumulator += alphaArray[total]; //if we can just move ahead by the shiftBy amount and still stay in the alphabet (not go past Z), then we add the letter to the ciphered str
+      
+                };
+  };
+};
+    
+    return accumulator.toUpperCase(); // return the ciphered str
+};
+
+console.log(checkSum("FREE", 13))
