@@ -1,0 +1,125 @@
+  // passes freecodecamp cash register challenge
+
+  let arrCurrency = [
+    ["ONE HUNDRED", 10000], 
+    ["TWENTY", 2000], 
+    ["TEN", 1000], 
+    ["FIVE", 500], 
+    ["ONE", 100], 
+    ["QUARTER", 25],
+    ["DIME", 10],
+    ["NICKEL", 5],
+    ["PENNY", 1]
+    ]
+    
+function checkCashRegister(price, cash, cid) {
+  let changeFirst = cash - price; // original form of change
+  let change = cash*100 - price*100; // change due in pennies/cents to avoid JS math errors
+
+  let cashInDrawer = [...cid]; // copy cid array into new array
+  let changeDueArray = []; // what change is due
+  let drawerTotal = 0; // cash in drawer total
+  
+  let objectReturn = { // set up object to return
+    status: '',
+    change: []
+  }// object curly
+  
+for (let i = 0; i < cashInDrawer.length; i++) { // sums the cash in drawer
+    drawerTotal += cashInDrawer[i][1];
+  } // for curly
+  
+  let pre100DrawerTotal = drawerTotal; // backup drawer total in dollar value, not cents
+ 
+  drawerTotal *= 100; // converts cash in drawer to pennies to try to avoid JS math errors
+  
+if (drawerTotal < change) { // compare change due to amount of change in drawer. If change in drawer < change due, return INSUFFICIENT_FUNDS
+  objectReturn.status = 'INSUFFICIENT_FUNDS';// else return INSUFFICIENT_FUNDS and exit the function
+  return objectReturn;
+  
+}; // if curly
+ 
+  let billsAvailable = []; // create array to hold available bills (from register drawer)
+ 
+  cashInDrawer.reverse(); // flip the order of the cashInDrawer array to match the high to low order of the arrCurrency Array
+
+for (let i = 0; i < cashInDrawer.length; i++) { // loop through all the elements of the cashInDrawer array - these are bills/coins
+   let billNow = cashInDrawer[i][1] * 100; // convert cashInDrawer values to pennies
+   let billDenomination = arrCurrency[i][1]; // easier to work with
+   let billNumber = billNow / billDenomination; // number of each bill available in register
+   billNumber = billNumber.toFixed(2); // fix to 2 numbers past decimal to cut down on JS math errors
+   billNumber = Math.trunc(billNumber); // drop everything past the decimal
+   
+  billsAvailable.push([arrCurrency[i][0], billNumber]); // add number of each bill available in register to an nested array with the bill name attached
+ }; // for curly
+  
+for (let i = 0; i < arrCurrency.length; i++) { // compare chage due to largest bills/coin in drawer. If that fails, move to next largest and so on
+ let currentBill = arrCurrency[i][1]; // denomination of current bill
+ let billsNow = billsAvailable[i][1]; // how many of current bill are in register
+ let timesBillInChange = change / currentBill; // checks how many times the current bill value goes into the change due
+ let currentChangeFilled = 0;
+ 
+ timesBillInChange = timesBillInChange.toFixed(2); // fix to 2 digits past decimal point to cut down on JS math errors
+ timesBillInChange = Math.trunc(timesBillInChange); // drops off fractions, ie 49/25 = 1.96, trunc'd to 1. Can't have a fraction of a bill!
+
+  if (timesBillInChange >= billsNow && billsNow >=1) { // if there are as many bills (or fewer) in the register as we need for change, set currentChangeFilled to number of available bills, which is how many we have of this bill
+    currentChangeFilled = billsNow;
+  };// if curly
+  
+  if (timesBillInChange <= billsNow) { // else if there are more bills available than we need, set to currentChangeFilled to timesBillInChange, which is how many we need of this bill
+  currentChangeFilled = timesBillInChange;  
+  };// if curly
+  
+  if (timesBillInChange >= 1 && billsNow >= 1) { // if number of bills we need is > 1 and bills we have of that denomination is >1... 
+  changeDueArray.push([arrCurrency[i][0], currentChangeFilled]); // push into a nested array the bill name (ie PENNY) and number of them we gave for change
+  
+  change -= currentChangeFilled * currentBill; // decrease change still needed by the amount we just gave the customer
+  change = change.toFixed(2); // keep change to 2 digits to avoid math errors
+
+  billsNow -= timesBillInChange; // decrease bills still in register by the amount we just gave to the customer
+    
+  } else { // if we aren't using the current bill in change...
+       changeDueArray.push([arrCurrency[i][0], 0]); //  add a 0 to the end of each bill for the amount due if it is 0. This makes it easier to convert this to actual dollar value of each bill 
+    }; // else curly
+    
+}; // for curly
+ 
+let moneyAmountArray = []; // the array we will return with amount of each bill needed, in dollars and cents
+
+for (let i = 0; i < changeDueArray.length; i++) { // loop through the bills and convert number of bills needed to dollar and cents value
+  let dollarAmount = arrCurrency[i][1]/100; // put the value of that bill denomination back into dolars and cents from pennies
+  let changeNeeded = changeDueArray[i][1]; // how many of the bill we need
+  let billName = changeDueArray[i][0]; // name of the bill needed
+ 
+  if (changeNeeded > 0) { // if change is needed 
+  let changeDollarAmount = changeNeeded * dollarAmount; // how much will be needed total value of the bill
+  moneyAmountArray.push([billName, changeDollarAmount]); // adds bill name and it's $ value to the array we will print at the end
+ 
+  }; // if curly
+}; // for curly
+
+  
+if (change > 0) { // if there's still change left, that means we did not have enough bills in the right denomination to cover it, so...
+  objectReturn.status = 'INSUFFICIENT_FUNDS'; // return INSUFFICIENT_FUNDS and exit the function
+  return objectReturn;
+  
+}; // if curly
+    
+if (pre100DrawerTotal == changeFirst) { // if all the change in the drawer is equal to the change needed...
+  objectReturn.status = 'CLOSED'; // close the register lane
+  objectReturn.change = cid; // give all the change in the drawer
+  return objectReturn;
+    
+  }; // if curly
+
+if (change <= 0 && pre100DrawerTotal !== changeFirst) { // if change has been filled and customer did not give exact change
+  objectReturn.status = 'OPEN';// keep register lane open
+  objectReturn.change = moneyAmountArray; // the amount of change due
+  return objectReturn; 
+  };  // else curly
+  
+}; // function curly
+
+console.log(
+checkCashRegister(3.26, 100, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]])
+);
