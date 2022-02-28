@@ -1,3 +1,5 @@
+// this program works as a Ceasar's Cipher. Put in the key you want to encrypt in. To decrypt, subtract the original key from 26 and put the result in. Example: key was 17. Sub from 26, key is now 9 to decrypt. The function drops everything to lowercase to match the lowercase array. This will pass the FreeCodeCamp Ceasar's Cipher challenge. 
+
 let alphaArray = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]; // master alphabet array
 
 function checkSum(str, shiftBy) { // str =  string of letters, shiftBy = how far to shift the cipher
