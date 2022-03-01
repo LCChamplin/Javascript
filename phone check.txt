@@ -1,3 +1,5 @@
+// this function strips the symbols - (, ), and space from 10 or 11 number (if first number is 1), then returns the numbers as an array
+
 let goodArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]; // array for #s
 let symbolArray = [ "-", " ", "(", ")"]; // array for acceptable symbols
 
